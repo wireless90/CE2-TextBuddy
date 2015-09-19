@@ -180,9 +180,11 @@ public class TextBuddy{
 			return CommandType.SEARCH;
 		case "sort":
 			return CommandType.SORT;
+			
+		default:
+			return null;
 		}
 		
-		return null;
 	}
 	
 	private boolean processCommand(String args[])	{
@@ -216,9 +218,11 @@ public class TextBuddy{
 		case SORT:
 			sortCommand();
 			return true;
+		
+		default:
+			return false;
 		}
 		
-		return false;
 	}
 	
 	public void sortCommand() {
@@ -330,6 +334,7 @@ public class TextBuddy{
 		
 		return lines;
 	}
+	
 	private void displayCommand(){
 		ArrayList<String> lines;
 		

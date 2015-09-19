@@ -33,7 +33,7 @@ public class UnitTestTextBuddy {
 	@Test
 	public void testAddingToFile(){
 		
-		String newFileName = "testAddingToFile.txt";
+		String newFileName = "testAddToFile.txt";
 		String stringToWrite = "testing add";
 		String addResult = null;
 		String expectedResult = String.format(TextBuddy.DISPLAY_ADD_MSG, newFileName, stringToWrite);
@@ -54,8 +54,8 @@ public class UnitTestTextBuddy {
 	
 	@Test
 	public void testClearFile(){
-		String newFileName = "testAddingToFile.txt";
-		String stringToWrite = "testing add";
+		String newFileName = "testClearFile.txt";
+		String stringToWrite = "testing clear";
 		String expectedResult = String.format(TextBuddy.DISPLAY_CLEAR_MSG, newFileName);
 		String clearResult = null;
 		

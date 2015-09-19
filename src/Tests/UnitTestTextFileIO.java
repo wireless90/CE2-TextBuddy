@@ -5,24 +5,12 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
 import Todo.*;
 
 public class UnitTestTextFileIO {
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T extends Comparable> boolean isSorted(List<T> listOfT) {
-	    T previous = null;
-	    for (T t: listOfT) {
-	        if (previous != null && t.compareTo(previous) < 0) return false;
-	        previous = t;
-	    }
-	    return true;
-	}
-	
 	
 	@Test
 	public void testAddingToFile(){
@@ -58,4 +46,40 @@ public class UnitTestTextFileIO {
 		assertEquals(stringToWrite, lines.get(0));
 	}
 
+	
+	@Test
+	public void testClearFile(){
+		String newFileName = "testClearFile.txt";
+		String stringToWrite = "testing clear";
+		int expectedResult = 0;
+		
+		
+		
+		//0) Delete file if exist
+		File file = new File(newFileName);
+		if(file.exists())
+			file.delete();
+		
+		//1)Create a file
+		TextBuddy textBuddy = new TextBuddy(newFileName);
+		TextFileIO textFileIO = textBuddy.getTextFileIO();
+		
+		//2) Add a string
+		textBuddy.addCommand(new String[]{ stringToWrite });
+		
+		
+		try {
+			//3) Clear file
+			textFileIO.clearFile();
+			//4) File should contains 0 lines;
+			assertEquals(expectedResult, textFileIO.ReadLines().size());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	
 }
