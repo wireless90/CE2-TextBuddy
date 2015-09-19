@@ -30,16 +30,24 @@ public class TextBuddy{
 	private static final String DISPLAY_EMPTY_MSG = "%1$s is empty";
 	private static final String DISPLAY_DELETE_MSG = "deleted from %1$s: \"%2$s\"";
 	private static final String DISPLAY_ADD_MSG = "added to %s: \"%1$s\"";
+	private static final String DISPLAY_SEARCH_MSG = "searching string  \"%s\"";
+	private static final String DISPLAY_SEARCH_NOT_FOUND_MSG = "string  \"%s\" not found";
+	private static final String DISPLAY_SORTED_MSG = "file has been sorted in ascending order";
 	
 	private TextFileIO textFileIO;
 	private Scanner scanner;
 	private String fileName;
 	
  	private enum CommandType{
-		ADD, DELETE, DISPLAY, EXIT, CLEAR
+		ADD, DELETE, DISPLAY, EXIT, CLEAR, SEARCH, SORT
 	};
 	
-	/**** Program Entry Point ****/
+	public TextFileIO getTextFileIO() { 
+		return this.textFileIO; 
+		}
+	
+
+
 	public static void main(String[] args){
 		if(!hasSufficientCommandLineArguments(args)){
 			displayInsufficientArgsError();
@@ -52,21 +60,19 @@ public class TextBuddy{
 		
 	}
 
-	/**** Constructor ****/
+
 	public TextBuddy(String fileName){
 		this.fileName = fileName;
 		textFileIO = new TextFileIO(fileName);
 		scanner = new Scanner(System.in);
 	}
-	
-	/**** Static Methods ****/
-	
+
+
 	private static boolean hasSufficientCommandLineArguments(String[] commandLineArgs){
 		
 		if(commandLineArgs.length < 1){
 			return false;
 		}
-		
 		return true;
 	}
 	
@@ -124,7 +130,7 @@ public class TextBuddy{
 	}
 	
 	/* Methods */
-	private void run(){
+	public void run(){
 		boolean hasMoreCommands;
 		
 		displayWelcomeMessage();
@@ -168,6 +174,10 @@ public class TextBuddy{
 			return CommandType.CLEAR;
 		case "exit":
 			return CommandType.EXIT;
+		case "search":
+			return CommandType.SEARCH;
+		case "sort":
+			return CommandType.SORT;
 		}
 		
 		return null;
@@ -196,12 +206,59 @@ public class TextBuddy{
 			
 		case EXIT:
 			return false;
-			
+		
+		case SEARCH:
+			String searchString = args[1];
+			searchCommand(searchString);
+			return true;
+		case SORT:
+			sortCommand();
+			return true;
 		}
 		
 		return false;
 	}
 	
+	private void sortCommand() {
+		ArrayList<String> lines = getAllLines();
+		try {
+			textFileIO.sortFile(lines);
+		} catch (IOException e) {
+			print(TextFileIO.ERROR_FILE_READ, true);
+			print(e.getMessage(), true);
+		}
+		
+		print(DISPLAY_SORTED_MSG, true);
+	}
+	
+	private void searchCommand(String searchString) {
+		ArrayList<String> matches = new ArrayList<String>();
+		int numOfMatches = 1;
+		
+		print(String.format(DISPLAY_SEARCH_MSG, searchString), true);
+		
+		try {
+			matches = textFileIO.search(searchString);
+		} catch (IOException e) {
+			print(TextFileIO.ERROR_FILE_READ, true);
+			print(e.getMessage(), true);
+			return;
+		}
+		
+		/* Prints "no matches" */
+		if(matches.size() == 0)
+		{
+			print(String.format(DISPLAY_SEARCH_NOT_FOUND_MSG, searchString), true);
+			return;
+		}
+		
+		/* Prints all the matches found */
+		for(String stringMatch : matches){
+			
+			print(numOfMatches + ") " +  stringMatch, true);
+		}
+	}
+
 	private void addCommand(String[] words)	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -246,34 +303,45 @@ public class TextBuddy{
 		} catch (IOException e) {			
 			print(TextFileIO.ERROR_FILE_DELETE, true);
 			print(e.getMessage(), true);
+			return;
 		}
 	}
 	
-	private void displayCommand(){
-		ArrayList<String> lines;
-		
+	public ArrayList<String> getAllLines()
+	{
+		ArrayList<String> lines = null;
+			
 		try {
 			lines = textFileIO.ReadLines();
-			if(lines.size() == 0){
-				printDisplayEmptyMessage();
-				printNewLine();
-				return;
-			}
-			
-			
-			for(int i = 1; i <= lines.size(); i++){
-				print(i + ". " + lines.get(i-1), true);
-			}
-			printNewLine();			
-			
 		} catch (IOException e) {
 			print(TextFileIO.ERROR_FILE_READ, true);
 			print(e.getMessage(), true);
+			return null;
 		}
+		
+		return lines;
+	}
+	private void displayCommand(){
+		ArrayList<String> lines;
+		
+		lines = getAllLines();
+		if(lines.size() == 0){
+			printDisplayEmptyMessage();
+			printNewLine();
+			return;
+		}
+		
+		
+		for(int i = 1; i <= lines.size(); i++){
+			print(i + ". " + lines.get(i-1), true);
+		}
+		printNewLine();
 		
 		
 	}
 
-	
+	public String getFileName(){
+		return fileName;
+	}
 	
 }
