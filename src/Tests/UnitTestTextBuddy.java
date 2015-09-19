@@ -11,7 +11,7 @@ import org.junit.Test;
 import Todo.*;
 
 
-public class SearchTesting {
+public class UnitTestTextBuddy {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T extends Comparable> boolean isSorted(List<T> listOfT) {
@@ -24,21 +24,6 @@ public class SearchTesting {
 	}
 	
 	
-	/*
-	 * Test Domain (From File) :12 hello words search.txt
-	 * Search keyword : "hello"
-	 * Expected number of results : 12
-	 */
-	@Test
-	public void testIfSorted(){
-		TextBuddy textBuddy = new TextBuddy("12 hello words search.txt");
-		ArrayList<String> lines = textBuddy.getAllLines();
-		
-		lines = textBuddy.getTextFileIO().sort(lines);
-		
-		assertEquals(true, isSorted(lines));
-	}
-	
 
 	/*
 	 * Test Domain (From File) :12 hello words search.txt
@@ -46,10 +31,12 @@ public class SearchTesting {
 	 * Expected number of results : 1
 	 */
 	@Test
-	public void testAddOneLineToFile(){
+	public void testAddingToFile(){
 		
 		String newFileName = "testAddingToFile.txt";
 		String stringToWrite = "testing add";
+		String addResult = null;
+		String expectedResult = String.format(TextBuddy.DISPLAY_ADD_MSG, newFileName, stringToWrite);
 		
 		//0) Delete file if exist
 		File file = new File(newFileName);
@@ -59,26 +46,60 @@ public class SearchTesting {
 		//1)Create a file
 		TextBuddy textBuddy = new TextBuddy(newFileName);
 		
-		//2)Add a string
-		try {
-			
-			textBuddy.getTextFileIO().WriteLine(stringToWrite);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		//3)Read from file, should only read 1 line
-		ArrayList<String> lines =  textBuddy.getAllLines();
-
-		assertEquals(stringToWrite, lines.get(0));
+		addResult = textBuddy.addCommand(new String[] { stringToWrite });
+	
+		assertEquals(expectedResult, addResult);
 		
 	}
 	
+	@Test
+	public void testClearFile(){
+		String newFileName = "testAddingToFile.txt";
+		String stringToWrite = "testing add";
+		String expectedResult = String.format(TextBuddy.DISPLAY_CLEAR_MSG, newFileName);
+		String clearResult = null;
+		
+		//0) Delete file if exist
+		File file = new File(newFileName);
+		if(file.exists())
+			file.delete();
+		
+		//1)Create a file
+		TextBuddy textBuddy = new TextBuddy(newFileName);
+		
+		//2) Add a string
+		textBuddy.addCommand(new String[]{ stringToWrite });
+		
+		//3) Clear file
+		clearResult = textBuddy.clearCommand();
+		
+		//4) File should contains 0 lines;
+		assertEquals(expectedResult, clearResult);
+	}
 	
 	@Test
 	public void testDeleteFromFile(){
+		String newFileName = "testDeletingFromFile.txt";
+		String stringToWrite = "testing Delete";
+		String deleteText = stringToWrite;
+		String expectedResult = String.format(TextBuddy.DISPLAY_DELETE_MSG, newFileName, deleteText);
+		String deleteResult = null;
 		
+		//0) Delete file if exist
+		File file = new File(newFileName);
+		if(file.exists())
+			file.delete();
+		
+		//1)Create a file
+		TextBuddy textBuddy = new TextBuddy(newFileName);
+		
+		//2) Add a string
+		textBuddy.addCommand(new String[]{ stringToWrite });
+		
+		//3) Delete 1 line
+		deleteResult = textBuddy.deleteCommand(1);
+		
+		assertEquals(expectedResult, deleteResult);
 	}
 	
 	
@@ -94,6 +115,7 @@ public class SearchTesting {
 		String searchString = "hello";
 		int expectedNumberOfResults = 12;
 		ArrayList<String> results = new ArrayList<String>();
+		
 		try {
 			results = textBuddy.getTextFileIO().search(searchString);
 		} catch (IOException e) {

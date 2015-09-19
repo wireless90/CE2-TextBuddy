@@ -24,15 +24,15 @@ public class TextBuddy{
 	/****** Variables ******/
 	private static final String ERROR_INSUFFICIENT_ARGS = "Insufficient argument supplied.\nTextBuddy <filename>";
 	
-	private static final String DISPLAY_WELCOME_MSG = "Welcome to TextBuddy. %1$s is ready for use";
-	private static final String DISPLAY_COMMAND_PROMPT = "command: ";
-	private static final String DISPLAY_CLEAR_MSG = "all content deleted from %1$s";
-	private static final String DISPLAY_EMPTY_MSG = "%1$s is empty";
-	private static final String DISPLAY_DELETE_MSG = "deleted from %1$s: \"%2$s\"";
-	private static final String DISPLAY_ADD_MSG = "added to %s: \"%1$s\"";
-	private static final String DISPLAY_SEARCH_MSG = "searching string  \"%s\"";
-	private static final String DISPLAY_SEARCH_NOT_FOUND_MSG = "string  \"%s\" not found";
-	private static final String DISPLAY_SORTED_MSG = "file has been sorted in ascending order";
+	public static final String DISPLAY_WELCOME_MSG = "Welcome to TextBuddy. %1$s is ready for use";
+	public static final String DISPLAY_COMMAND_PROMPT = "command: ";
+	public static final String DISPLAY_CLEAR_MSG = "all content deleted from %1$s";
+	public static final String DISPLAY_EMPTY_MSG = "%1$s is empty";
+	public static final String DISPLAY_DELETE_MSG = "deleted from %1$s: \"%2$s\"";
+	public static final String DISPLAY_ADD_MSG = "added to %1s: \"%2$s\"";
+	public static final String DISPLAY_SEARCH_MSG = "searching string  \"%1s\"";
+	public static final String DISPLAY_SEARCH_NOT_FOUND_MSG = "string  \"%1s\" not found";
+	public static final String DISPLAY_SORTED_MSG = "file has been sorted in ascending order";
 	
 	private TextFileIO textFileIO;
 	private Scanner scanner;
@@ -89,10 +89,7 @@ public class TextBuddy{
 		TextBuddy textBuddy = new TextBuddy(fileName);
 		textBuddy.run();
 	}
-	
-	
-	/**** Printing Methods *****/
-	
+		
 	public static void print(String message, boolean isNewLine)	{
 		if(isNewLine){
 			System.out.println(message);
@@ -101,10 +98,12 @@ public class TextBuddy{
 		}
 	}
 		
-	private void printClearMessage(){
+	private String printClearMessage(){
 		String stringToPrint = String.format(DISPLAY_CLEAR_MSG, fileName);
 		print(stringToPrint, true);
 		printNewLine();
+		
+		return stringToPrint;
 	}
 	
 	private void printNewLine(){
@@ -117,16 +116,19 @@ public class TextBuddy{
 		printNewLine();
 	}
 	
-	private void printDeleteMessage(String deletedText){
+	private String printDeleteMessage(String deletedText){
 		String stringToPrint = String.format(DISPLAY_DELETE_MSG, fileName, deletedText);
 		print(stringToPrint, true);
 		printNewLine();
+		
+		return stringToPrint;
 	}
 	
-	private void printAddMessage(String addedText){
+	private String printAddMessage(String addedText){
 		String stringToPrint = String.format(DISPLAY_ADD_MSG, fileName, addedText);
 		print(stringToPrint, true);
 		printNewLine();
+		return stringToPrint;
 	}
 	
 	/* Methods */
@@ -219,7 +221,7 @@ public class TextBuddy{
 		return false;
 	}
 	
-	private void sortCommand() {
+	public void sortCommand() {
 		ArrayList<String> lines = getAllLines();
 		try {
 			textFileIO.sortFile(lines);
@@ -259,9 +261,9 @@ public class TextBuddy{
 		}
 	}
 
-	private void addCommand(String[] words)	{
+	public String addCommand(String[] words)	{
 		StringBuilder sb = new StringBuilder();
-		
+		String result;
 		//Add all the words to into 1 single string with a space " "
 		//i = 1 as '0' contains the "add" command
 		for(int i = 1; i < words.length - 1; i++){
@@ -275,36 +277,43 @@ public class TextBuddy{
 		
 		try {
 			textFileIO.WriteLine(addedText);
-			printAddMessage(addedText);
+			result = printAddMessage(addedText);
 			printNewLine();
 		} catch (IOException e) {
 			print(e.getMessage(), true);
-			return;
+			return null;
 		}
+		
+		return result;
 	}
 	
-	private void clearCommand(){
+	public String clearCommand(){
+		String resultOfClearingFile = null;
+		
 		try	{
 			textFileIO.clearFile();
-			printClearMessage();
+			resultOfClearingFile = printClearMessage();
 			printNewLine();
 		}catch(IOException ioe)	{
 			print(TextFileIO.ERROR_FILE_CLEAR, true);
 			print(ioe.getMessage(), true);
-			return;
 		}
+		return resultOfClearingFile;
 	}
 	
-	private void deleteCommand(int n){
+	public String deleteCommand(int n){
+		String resultOfDeletion = null;
+		
 		try {
 			String deletedLine = textFileIO.deleteLine(n);
-			printDeleteMessage(deletedLine);
+			resultOfDeletion = printDeleteMessage(deletedLine);
 			printNewLine();
 		} catch (IOException e) {			
 			print(TextFileIO.ERROR_FILE_DELETE, true);
 			print(e.getMessage(), true);
-			return;
 		}
+		
+		return resultOfDeletion;
 	}
 	
 	public ArrayList<String> getAllLines()
