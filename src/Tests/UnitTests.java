@@ -11,7 +11,7 @@ import org.junit.Test;
 import Todo.*;
 
 
-public class SearchTesting {
+public class UnitTests {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T extends Comparable> boolean isSorted(List<T> listOfT) {
@@ -76,11 +76,6 @@ public class SearchTesting {
 	}
 	
 	
-	@Test
-	public void testDeleteFromFile(){
-		
-	}
-	
 	
 	/*
 	 * The domain of search is a predefined text file.
@@ -94,6 +89,7 @@ public class SearchTesting {
 		String searchString = "hello";
 		int expectedNumberOfResults = 12;
 		ArrayList<String> results = new ArrayList<String>();
+		
 		try {
 			results = textBuddy.getTextFileIO().search(searchString);
 		} catch (IOException e) {
