@@ -46,8 +46,8 @@ public class TextBuddy{
 		return this.textFileIO; 
 		}
 	
-	
-	/**** Program Entry Point ****/
+
+
 	public static void main(String[] args){
 		if(!hasSufficientCommandLineArguments(args)){
 			displayInsufficientArgsError();
@@ -60,21 +60,19 @@ public class TextBuddy{
 		
 	}
 
-	/**** Constructor ****/
+
 	public TextBuddy(String fileName){
 		this.fileName = fileName;
 		textFileIO = new TextFileIO(fileName);
 		scanner = new Scanner(System.in);
 	}
-	
-	/**** Static Methods ****/
-	
+
+
 	private static boolean hasSufficientCommandLineArguments(String[] commandLineArgs){
 		
 		if(commandLineArgs.length < 1){
 			return false;
 		}
-		
 		return true;
 	}
 	
@@ -235,6 +233,7 @@ public class TextBuddy{
 	
 	private void searchCommand(String searchString) {
 		ArrayList<String> matches = new ArrayList<String>();
+		int numOfMatches = 1;
 		
 		print(String.format(DISPLAY_SEARCH_MSG, searchString), true);
 		
@@ -254,8 +253,10 @@ public class TextBuddy{
 		}
 		
 		/* Prints all the matches found */
-		for(String match : matches)
-			print(match, true);
+		for(String stringMatch : matches){
+			
+			print(numOfMatches + ") " +  stringMatch, true);
+		}
 	}
 
 	private void addCommand(String[] words)	{

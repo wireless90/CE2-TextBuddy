@@ -81,11 +81,6 @@ public class SearchTesting {
 		
 	}
 	
-	@Test
-	public void testDisplayFromFile(){
-		
-	}
-	
 	
 	/*
 	 * The domain of search is a predefined text file.
