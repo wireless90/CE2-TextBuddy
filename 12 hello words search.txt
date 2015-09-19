@@ -3,7 +3,7 @@ It contains all types of variations
 
 Legend: * represents 0 or more characters
 
-Varations
+Variations
 1) *<word> sentence
 2) <word>* sentence
 3) *<word>* sentence
