@@ -10,6 +10,7 @@ package Todo;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class TextFileIO{
@@ -35,15 +36,43 @@ public class TextFileIO{
 	}
 	
 	
-	/* Methods */
+	
+	public ArrayList<String> search(String searchString) throws IOException{
+		/* Get all lines from file */
+		ArrayList<String> lines = ReadLines();
+		ArrayList<String> matches = new ArrayList<String>();
+		
+		/* Collate all matches */
+		for(String line : lines)
+			if(line.contains(searchString))
+				matches.add(line);
+		return matches;
+	}
+	
+	public ArrayList<String> sort(ArrayList<String> listToSort){
+		Collections.sort(listToSort);		
+		return listToSort;
+	}
+	
+	public ArrayList<String> sortFile(ArrayList<String> listToSort) throws IOException{
+		ArrayList<String> sortedList = sort(listToSort);
+		File file = new File(fileName);
+		file.delete();
+		
+		for(String line : sortedList){
+			WriteLine(line);
+		}
+		
+		return sortedList;
+	}
 	
 	public String ReadLine() throws IOException{		
 		Path path = Paths.get(fileName);
 		BufferedReader reader = Files.newBufferedReader(path);
 		
 		String line = reader.readLine();
-		
 		reader.close();
+		
 		return line;
 	}
 	
@@ -56,7 +85,6 @@ public class TextFileIO{
 		}
 		
 		BufferedReader reader = Files.newBufferedReader(path);
-		
 		String line = null;		
 		//Read each line and store
 		while((line = reader.readLine()) != null){
@@ -83,6 +111,13 @@ public class TextFileIO{
 	}
 	
 	public String deleteLine(int num) throws IOException{
+		
+		/* 
+		 * Create a temp file and read all lines
+		 * from original file, disregarding the line at num.
+		 * Then the original file is deleted.
+		 * Temp file renamed to original file.
+		 */
 		File tempFile = new File("temp.txt");
 		File currentFile = new File(fileName);
 		

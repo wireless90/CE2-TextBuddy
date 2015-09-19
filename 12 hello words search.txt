@@ -1,0 +1,51 @@
+Each test case here contains the work "h.e.l.l.o" without the "."
+It contains all types of variations
+
+Legend: * represents 0 or more characters
+
+Varations
+1) *<word> sentence
+2) <word>* sentence
+3) *<word>* sentence
+4) sentence *<word> sentence
+5) sentence <word>* sentence
+6) sentence *<word>* sentence
+7) sentence *<word>
+8) sentence <word>*
+9) sentence *<word>*
+
+The search for "h.e.l.l.o" should return 12 results!
+
+1)
+
+hello how are you
+
+asdhello how are you
+hellodsad how are you
+asdasdhelloasdsad how are you
+
+
+2)
+how hello are you
+
+how asdhello are you
+ how hellodsad are you
+how are you asdasdhelloasdsad
+
+3)
+how are you hello
+
+how are you asdhello
+ how are you hellodsad
+how are you asdasdhelloasdsad
+
+
+rubbish texts
+rubbish textsrubbish textsrubbishrubbish texts
+rubbish texts
+rubbish textsrubbish textsrubbish textsrubbish textsrubbishrubbish texts
+
+rubbish textsrubbish textsrubbishrubbish texts
+rubbish texts
+rubbish texts
+rubbish textsrubbish
